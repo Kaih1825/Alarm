@@ -144,7 +144,7 @@ class _setAlarmState extends State<setAlarm> {
                             ),
                           ),
                           const Text(
-                            "次",
+                            "次1",
                             style: TextStyle(color: Colors.white),
                           )
                         ],
