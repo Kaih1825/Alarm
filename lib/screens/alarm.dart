@@ -158,6 +158,7 @@ class _AlarmState extends State<Alarm> {
                                                                     each[index],
                                                                 'total': total[
                                                                     index],
+                                                                'index':index
                                                               });
                                                         },
                                                         child: Icon(

@@ -1,5 +1,8 @@
+import 'package:alarm/screens/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:flutter/services.dart';
 
 class setAlarm extends StatefulWidget {
   const setAlarm({super.key});
@@ -14,14 +17,24 @@ class _setAlarmState extends State<setAlarm> {
   int each = 0;
   int total = 0;
   String tempTime = "";
+  int index = 0;
   TextEditingController nameController = TextEditingController();
   TextEditingController eachController = TextEditingController();
   TextEditingController totalController = TextEditingController();
+
+  void initState() {
+    super.initState();
+    nameController.text = alarmTime;
+    eachController.text = each == 0 ? "" : each.toString();
+    totalController.text = total == 0 ? "" : total.toString();
+  }
+
   Widget build(BuildContext context) {
     dynamic obj = ModalRoute.of(context)!.settings.arguments;
     alarmTime = obj["alarm"];
     each = obj["each"];
     total = obj["total"];
+    index = obj["index"];
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -73,10 +86,11 @@ class _setAlarmState extends State<setAlarm> {
                         topRight: Radius.circular(30)),
                     color: Colors.grey.shade900),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+                  padding: const EdgeInsets.only(left: 30, right: 30, top: 40),
                   child: Column(
                     children: [
                       TextField(
+                        textAlign: TextAlign.center,
                         decoration: const InputDecoration(
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
@@ -93,61 +107,116 @@ class _setAlarmState extends State<setAlarm> {
                         style: const TextStyle(color: Colors.white),
                         controller: nameController,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "每",
-                            style: TextStyle(color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              const Text(
+                                "每",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                      hintText: "分鐘",
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.yellow),
+                                      ),
+                                      hintStyle: TextStyle(color: Colors.grey)),
+                                  cursorColor: Colors.yellow,
+                                  onEditingComplete: () {
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: totalController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                ),
+                              ),
+                              const Text(
+                                "分鐘響一次，共",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                      hintText: "次數",
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.yellow),
+                                      ),
+                                      hintStyle: TextStyle(color: Colors.grey)),
+                                  cursorColor: Colors.yellow,
+                                  onEditingComplete: () {
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  style: const TextStyle(color: Colors.white),
+                                  controller: eachController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                ),
+                              ),
+                              const Text(
+                                "次",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            width: 30,
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.yellow),
-                                  ),
-                                  hintStyle: TextStyle(color: Colors.grey)),
-                              cursorColor: Colors.yellow,
-                              onEditingComplete: () {
-                                FocusScope.of(context).unfocus();
-                              },
-                              style: const TextStyle(color: Colors.white),
-                              controller: eachController,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.yellow),
+                                child: const Text(
+                                  "取消",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                             ),
-                          ),
-                          const Text(
-                            "分鐘響一次，共",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(
-                            width: 30,
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.yellow),
-                                  ),
-                                  hintStyle: TextStyle(color: Colors.grey)),
-                              cursorColor: Colors.yellow,
-                              onEditingComplete: () {
-                                FocusScope.of(context).unfocus();
-                              },
-                              style: const TextStyle(color: Colors.white),
-                              controller: eachController,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Alarm()
+                                  Navigator.pop(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.yellow),
+                                child: const Text(
+                                  "確定",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                             ),
-                          ),
-                          const Text(
-                            "次10",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
+                          ],
+                        ),
                       )
                     ],
                   ),
